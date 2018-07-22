@@ -5,6 +5,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -29,7 +30,6 @@ public class HomeWorks {
         driver = new AndroidDriver(new URL("http://127.0.0.1:4723/wd/hub"), capabilities);
     }
 
-
     @Test
     /*
 Method, should check presence of text “Search…”
@@ -38,7 +38,7 @@ in the 'Search' field before typing text
     public void HW2IsSearchFieldHasCorrectText(){
 waitForElementAndClick(
         By.id("fragment_onboarding_skip_button"),
-        "can not find Elenent 'Skip'",
+        "can not find Element 'Skip'",
         5);
 waitForElementAndClick(
         By.id("search_container"),
@@ -55,6 +55,33 @@ String fieldText = waitElementPresent(
                fieldText);
     }
 
+    @Test
+    /*test should:
+1. search any word
+2. To check, that articles  are found
+3. cancel search
+4. To check, search result not present
+ */
+    public  void HW3SearchByWordAndCancel(){
+        //skip first page
+        waitForElementAndClick(
+                By.id("fragment_onboarding_skip_button"),
+                "can not find Element 'Skip'",
+                5);
+        //Type word to 'search'  field
+        waitForElementAndSendKeys(By.id("search_container"),
+                "interface",
+                "can not find Element with text 'Search Wikipedia'",
+                5);
+
+        Assert.assertEquals(true, isElementPresent(By.id("page_list_item_description")));
+
+        //cancel search by tapping on the 'x' button
+        TapOnElement(By.id("search_close_btn"));
+
+        Assert.assertEquals(false, isElementPresent(By.id("page_list_item_description")));
+
+     }
 
     @After
     public  void tearDown(){
@@ -89,7 +116,21 @@ String fieldText = waitElementPresent(
         return element;
     }
 
+    private void TapOnElement(By locator) {
+        driver.findElement(locator).click();
+    }
 
-
-
+private boolean isElementPresent(By locator) {
+       try {
+            driver.findElement(locator);
+            return true;
+        } catch (NoSuchElementException e) {
+            return false;
+        }
+    }
 }
+//        return waitElementPresent(locator, "not found"  );
+//    }
+
+
+
