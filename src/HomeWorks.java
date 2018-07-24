@@ -12,6 +12,8 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 public class HomeWorks {
     AppiumDriver driver;
@@ -21,7 +23,7 @@ public class HomeWorks {
         DesiredCapabilities capabilities = new DesiredCapabilities();
         capabilities.setCapability("platformName", "Android");
         capabilities.setCapability("deviceName", "SGNote5");
-        capabilities.setCapability("platformVersion", "7.0");
+        capabilities.setCapability("platformVersion", "6.0");
         capabilities.setCapability("automationName", "Appium");
         capabilities.setCapability("appPackage", "org.wikipedia");
         capabilities.setCapability("appActivity", "main.MainActivity");
@@ -82,6 +84,34 @@ String fieldText = waitElementPresent(
         Assert.assertEquals(false, isElementPresent(By.id("page_list_item_description")));
 
      }
+
+    @Test
+    /*test should:
+1. search any word
+2. To check, that all search results does contain this word
+ */
+    public  void HW4SearchByWordAndCheckThatAllResultsContainsThisWord(){
+        //skip first page (on native device SG)
+//        waitForElementAndClick(
+//                By.id("fragment_onboarding_skip_button"),
+//                "can not find Element 'Skip'",
+//                5);
+        //Type word to 'search'  field
+        waitForElementAndSendKeys(By.id("search_container"),
+                "interface",
+                "can not find Element with text 'Search Wikipedia'",
+                5);
+
+        Assert.assertEquals(true, isElementPresent(By.id("page_list_item_description")));
+
+        List<WebElement>results = driver.findElements(By.id("page_list_item_container"));
+        for(WebElement result : results){
+            String title = result.findElement(By.id("page_list_item_title")).getText();
+            System.out.println(title);
+
+          Assert.assertTrue("The title does not contain a word " +title.toString(), title.toString().contains("Interface"));
+        }
+    }
 
     @After
     public  void tearDown(){
