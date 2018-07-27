@@ -1,9 +1,6 @@
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.android.AndroidDriver;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
@@ -38,10 +35,10 @@ Method, should check presence of text “Search…”
 in the 'Search' field before typing text
 */
     public void HW2IsSearchFieldHasCorrectText(){
-waitForElementAndClick(
-        By.id("fragment_onboarding_skip_button"),
-        "can not find Element 'Skip'",
-        5);
+//waitForElementAndClick(
+//        By.id("fragment_onboarding_skip_button"),
+//        "can not find Element 'Skip'",
+//        5);
 waitForElementAndClick(
         By.id("search_container"),
         "can not find Element with text 'Search Wikipedia'",
@@ -66,10 +63,10 @@ String fieldText = waitElementPresent(
  */
     public  void HW3SearchByWordAndCancel(){
         //skip first page
-        waitForElementAndClick(
-                By.id("fragment_onboarding_skip_button"),
-                "can not find Element 'Skip'",
-                5);
+//        waitForElementAndClick(
+//                By.id("fragment_onboarding_skip_button"),
+//                "can not find Element 'Skip'",
+   //             5);
         //Type word to 'search'  field
         waitForElementAndSendKeys(By.id("search_container"),
                 "interface",
@@ -106,10 +103,10 @@ String fieldText = waitElementPresent(
 
         List<WebElement>results = driver.findElements(By.id("page_list_item_container"));
         for(WebElement result : results){
-            String title = result.findElement(By.id("page_list_item_title")).getText();
+            String title = result.findElement(By.id("page_list_item_title")).getText().toLowerCase();
             System.out.println(title);
 
-          Assert.assertTrue("The title does not contain a word " +title.toString(), title.toString().contains("Interface"));
+          Assert.assertTrue("The title does not contain a word " +title.toString(), title.toString().contains("interface"));
         }
     }
 
