@@ -1,35 +1,12 @@
-import io.appium.java_client.AppiumDriver;
-import io.appium.java_client.android.AndroidDriver;
-import org.junit.After;
-import org.junit.Before;
+import io.appium.java_client.TouchAction;
 import org.junit.Test;
-
-
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.net.MalformedURLException;
-import java.net.URL;
+public class FirstTest extends TestBase {
 
-public class FirstTest {
-    private AppiumDriver driver;
-
-    @Before
-    public void setUp() throws MalformedURLException {
-        DesiredCapabilities capabilities = new DesiredCapabilities();
-        capabilities.setCapability("platformName", "Android");
-        capabilities.setCapability("deviceName", "androidTestDevice");
-        capabilities.setCapability("platformVersion", "6.0");
-        capabilities.setCapability("automationName", "Appium");
-        capabilities.setCapability("appPackage", "org.wikipedia");
-        capabilities.setCapability("appActivity", "main.MainActivity");
-        capabilities.setCapability("app", "C:/Users/Elena/Documents/STQA/mobile auto/JavaAppiumAutomation/apks/org.wikipedia.apk");
-
-        driver = new AndroidDriver(new URL("http://127.0.0.1:4723/wd/hub"), capabilities);
-    }
 
     @Test
     public void firstTest() {
@@ -37,7 +14,7 @@ public class FirstTest {
                 "//*[contains(@text, 'Search Wikipedia')]",
                 "element can not find",
                 3);
-                //driver.findElementByXPath("//*[contains(@text, 'Search Wikipedia')]");
+        //driver.findElementByXPath("//*[contains(@text, 'Search Wikipedia')]");
         elementInitSearch.click();
         //System.out.println("First test run.");
 
@@ -48,18 +25,18 @@ public class FirstTest {
 
     private WebElement waitElementPresentByXPath(String xPath, String errorMessage, long timeOutInSeconds) {
         WebDriverWait wait = new WebDriverWait(driver, timeOutInSeconds);
-        wait.withMessage("error message" +"\n" );
+        wait.withMessage("error message" + "\n");
         By by = By.xpath(xPath);
-        return  wait.until(ExpectedConditions.presenceOfElementLocated(by));
+        return wait.until(ExpectedConditions.presenceOfElementLocated(by));
     }
 
     @Test
-    public  void searchForJavaArticles(){
+    public void searchForJavaArticles() {
         WebElement elementInitSearch = waitElementPresentByXPath(
                 "//*[contains(@text, 'Search Wikipedia')]",
                 "element 'elementInitSearch' can not find",
                 3);
-       elementInitSearch.click();
+        elementInitSearch.click();
 
         WebElement elementTypeInSearchField = driver.findElementById("search_src_text");
         elementTypeInSearchField.sendKeys("Java");
@@ -70,7 +47,7 @@ public class FirstTest {
     }
 
     @Test
-    public void Homework2(){
+    public void Homework2() {
         WebElement elementInitSearch = waitElementPresentByXPath(
                 "//*[contains(@text, 'Search Wikipedia')]",
                 "element can not find",
@@ -80,16 +57,70 @@ public class FirstTest {
         WebElement elementTypeInSearchField = driver.findElementById("search_src_text");
         elementTypeInSearchField.sendKeys("interface");
 
-       waitElementPresentByXPath("//*[contains(@text, 'Interface (computing)')]", "Interface (computing)", 15);
+        waitElementPresentByXPath("//*[contains(@text, 'Interface (computing)')]", "Interface (computing)", 15);
+    }
+
+    @Test
+    public void swipeTest() {
+        WebElement elementInitSearch = waitElementPresentByXPath(
+                "//*[contains(@text, 'Search Wikipedia')]",
+                "element 'elementInitSearch' can not find",
+                3);
+        elementInitSearch.click();
+
+        WebElement elementTypeInSearchField = driver.findElementById("search_src_text");
+        elementTypeInSearchField.sendKeys("App");
+        swipeToElement(By.id("page_external_link"), "element not present", 0);
+
+
+//        waitElementPresentByXPath("//*[@resource-id='org.wikipedia:id/page_list_item_container']//*[@text='Object-oriented programming language']",
+//                "Can not find",
+//                15);
+//        swipeUp(2000);
+//        swipeUp(2000);
+//        swipeUp(2000);
+    }
+
+  @Test
+    public  void saveArticleToMyList(){
+
+        String folderName = "Learning programming";
+
+        waitForElementAndClick(By.xpath("//*[contains(@text, 'Search Wikipedia')]"),
+                "element 'elementInitSearch' can not find", 3);
+      waitForElementAndSendKeys(By.id("search_src_text"),
+              "Java", "element 'elementInitSearch' can not find",3 );
+      waitForElementAndClick(By.xpath("//*[@resource-id='org.wikipedia:id/page_list_item_container']//*[@text='Object-oriented programming language']"),
+              "element not found", 3 );
+      //waitElementPresent(By.xpath("//*[@text='Object-oriented programming language']"),
+            //  "notPresent", 3);
+      waitForElementAndClick(By.xpath("//*[@content-desc='More options']"),
+              "button menu not found", 3);
+waitForElementAndClick(By.xpath("//*[@text='Add to reading list']"),
+        "err", 3);
+waitForElementAndClick(By.id("onboarding_button"),
+        "element button gotit not present", 3);
+waitForElementAndClear(By.id("text_input"),
+        "text_input not found");
+waitForElementAndSendKeys(By.id("text_input"),folderName,
+        "can not put text to input  field", 3);
+waitForElementAndClick(By.xpath("//*[@text='OK']"),
+        "button 'Ok' not found", 5);
+waitForElementAndClick(By.xpath("//*[@content-desc='Navigate up']"),
+        "button 'X' not found", 5);
+waitForElementAndClick(By.xpath("//*[@content-desc='My lists']"),
+        "element 'My lists' not found", 5);
+waitForElementAndClick(By.xpath("//*[@text='" + folderName+"']"),
+        "folder 'Learning programming' not clicked", 5);
+//waitElementPresent(By.xpath("//[@text='object-oriented programming language']"),
+//        "article 'object-oriented programming language' not found",
+//        3);
+//object-oriented programming language
+      swipeElementToLeft(By.xpath("//*[@resource-id='org.wikipedia:id/page_list_item_container']//*[@text='Object-oriented programming language']"),
+              "article 'object-oriented programming language' not found");
+      waitElementNotPresent(By.xpath("//*[@resource-id='org.wikipedia:id/page_list_item_container']//*[@text='Object-oriented programming language']"),
+              "article 'object-oriented programming language' not deleted", 5);
     }
 
 
-
-
-
-
-    @After
-    public  void tearDown(){
-        driver.quit();
-    }
 }

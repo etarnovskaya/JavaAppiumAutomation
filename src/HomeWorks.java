@@ -1,33 +1,11 @@
-import io.appium.java_client.AppiumDriver;
-import io.appium.java_client.android.AndroidDriver;
-import org.junit.*;
+import org.junit.Assert;
+import org.junit.Test;
 import org.openqa.selenium.By;
-import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.remote.DesiredCapabilities;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
+
 import java.util.List;
 
-public class HomeWorks {
-    AppiumDriver driver;
-
-    @Before
-    public void setUp() throws MalformedURLException {
-        DesiredCapabilities capabilities = new DesiredCapabilities();
-        capabilities.setCapability("platformName", "Android");
-        capabilities.setCapability("deviceName", "SGNote5");
-        capabilities.setCapability("platformVersion", "6.0");
-        capabilities.setCapability("automationName", "Appium");
-        capabilities.setCapability("appPackage", "org.wikipedia");
-        capabilities.setCapability("appActivity", "main.MainActivity");
-        capabilities.setCapability("app", "C:/Users/Elena/Documents/STQA/mobile auto/JavaAppiumAutomation/apks/org.wikipedia.apk");
-
-        driver = new AndroidDriver(new URL("http://127.0.0.1:4723/wd/hub"), capabilities);
-    }
+public class HomeWorks extends TestBase{
 
     @Test
     /*
@@ -35,10 +13,10 @@ Method, should check presence of text “Search…”
 in the 'Search' field before typing text
 */
     public void HW2IsSearchFieldHasCorrectText(){
-//waitForElementAndClick(
-//        By.id("fragment_onboarding_skip_button"),
-//        "can not find Element 'Skip'",
-//        5);
+waitForElementAndClick(
+        By.id("fragment_onboarding_skip_button"),
+        "can not find Element 'Skip'",
+        5);
 waitForElementAndClick(
         By.id("search_container"),
         "can not find Element with text 'Search Wikipedia'",
@@ -110,54 +88,139 @@ String fieldText = waitElementPresent(
         }
     }
 
-    @After
-    public  void tearDown(){
-        driver.quit();
-    }
+    @Test
+    public void HW5AddTwoArticlesToTheListAndDeleteOne() throws InterruptedException {
+        /*
+        Test Should
+        add two articles to the 'Reading list'
+        delete by swipe one article
+        verify, that in the list one article present
+         */
+
+        String listNamefieldLocatorByxpath = "//*[@text='Name of this list']";
+        String listNamefieldLocatorById = "text_input";
+        String folderName = "My Homework";
+
+        //Skip  button
+//        waitForElementAndClick(
+//                By.id("fragment_onboarding_skip_button"),
+//                "can not find Element 'Skip'",
+//                5);
+        //PART 1
+        // Search article, select one and add to List
+        waitForElementAndClick(
+                By.id("search_container"),
+                "can not find Element 'Search bar'",
+                5);
+        waitForElementAndSendKeys(By.id("search_container"),
+                "interface",
+                "can not find Element with text 'Search Wikipedia'",
+                10);
+        waitForElementAndClick(By.xpath("//*[@text='Interface (computing)']"),
+                "Article 'Interface (computing)' not present ",
+                15);
+        Thread.sleep(2000);
+        waitForElementAndClick(By.xpath("//*[@content-desc='More options']"), "", 15);
+        Thread.sleep(2000);
+
+        waitForElementAndClick(By.xpath("//*[@text='Add to reading list']"),
+                "element menu 'Add to reading list' not present",
+                5);
+        waitForElementAndClick(By.xpath("//*[@resource-id='org.wikipedia:id/onboarding_container']//*[@text='GOT IT']"),
+                "button 'GOT IT' not clickable",
+                15);
+
+        if(isElementPresent(By.xpath("//*[@text='Create new']"))){
+        waitForElementAndClick(By.xpath("//*[@text='Create new']"),
+                "not present link 'Create new'",
+                15);}
+        //name list
+        waitForElementAndClick(By.id(listNamefieldLocatorById),
+                "Not possible to click on the field 'listname'",
+                15);
+        waitForElementAndClear(By.id(listNamefieldLocatorById),
+                "Not possible to clear the field 'listname'");
+        waitForElementAndSendKeys(By.id(listNamefieldLocatorById),
+                folderName,
+                "Not possible to type to the field 'listname'",
+                15);
+        //ok
+        waitForElementAndClick(By.xpath("//*[@text='OK']"),
+                "button 'ok' not clicable",
+                7);
+        //x
+        waitForElementAndClick(By.xpath("//*[@content-desc='Navigate up']"),
+                "not possible to close page using 'x'",
+                10);
+        //PART 2
+        //find and add to list 2-nd article
+
+        waitForElementAndClick(
+                By.id("search_container"),
+                "can not find Element 'Search bar'",
+                5);
+
+        waitForElementAndSendKeys(By.id("search_container"),
+                "java",
+                "can not find Element with text 'Search Wikipedia'",
+                10);
+        waitForElementAndClick(By.xpath("//*[@resource-id='org.wikipedia:id/page_list_item_container']//*[@text='Object-oriented programming language']"),
+                "element not found", 10 );
+        waitElementPresent(By.xpath("//*[@content-desc='More options']"),"menu not present");
+
+        waitForElementAndClick(By.xpath("//*[@content-desc='More options']"),
+                "Not possible to open menu",
+                18);
+        waitElementPresent(By.xpath("//*[@text='Add to reading list']"), "element 'Add to reading list' not present");
+        waitForElementAndClick(By.xpath("//*[@text='Add to reading list']"),
+                "element menu 'Add to reading list' not present",
+                18);
+Thread.sleep(2000);
+        waitForElementAndClick(By.xpath("//*[@text='"+folderName+"']"),
+                "the folder not present",
+                15);
+
+        //ckick x
+        waitForElementAndClick(By.xpath("//*[@content-desc='Navigate up']"),
+                "not possible to close page using 'x'",
+                15);
+
+        //PART 3 goTo saved lists and check, that articles are at list
+        //goTo saved lists
+        waitForElementAndClick(By.xpath("//android.widget.FrameLayout[@content-desc='My lists']"),
+                "err",
+                15);
+        //click on my folder
+        waitElementPresent(By.xpath("//*[@text='"+folderName+"']"), "");
+        waitForElementAndClick(By.xpath("//*[@text='"+folderName+"']"),
+                "the folder not present",
+                15);
+
+        waitElementPresent(By.id("page_list_item_container"), "");
+       // check, that articles are at list and count
+ int articlesCount=driver.findElements(By.id("page_list_item_container")).size();
+//   System.out.println(articlesCount);
+     Assert.assertEquals(2, articlesCount);
 
 
-    //______________________methods_____________________________________________________
-    private WebElement waitElementPresent(By locator,
-                                          String errorMessage, long timeOutInSeconds) {
-        WebDriverWait wait = new WebDriverWait(driver, timeOutInSeconds);
-        wait.withMessage(errorMessage + "\n");
+//        delete first article by swipe
+     swipeElementToLeft(By.xpath("//*[@text='Interface (computing)']"), "element not swiped");
+//
 
-        return wait.until(ExpectedConditions.presenceOfElementLocated(locator));
-    }
+        int articleCountAfterDeletion=driver.findElements(By.id("page_list_item_container")).size();
+      Assert.assertEquals(1, articleCountAfterDeletion);
+      String articleTytleInList = waitElementPresent(By.id("page_list_item_title"),
+              "",
+              15).getText();
 
-    private WebElement waitElementPresent(By locator, String errorMessage) {
-        return waitElementPresent(locator, errorMessage, 5);
-    }
+      waitForElementAndClick(By.id("page_list_item_container"), "", 5);
+      String articleTytle = waitElementPresent(By.id("view_page_title_text"), "", 10).getText();
 
-    private  WebElement waitForElementAndClick(By locator,
-                                               String errorMessage, long timeOutInSeconds){
-        WebElement element = waitElementPresent(locator, errorMessage, 5);
-        element.click();
-        return element;
-    }
-
-    private  WebElement waitForElementAndSendKeys(
-            By locator, String text, String errorMessage, long timeOutInSeconds){
-        WebElement element = waitElementPresent(locator, errorMessage, 5);
-        element.sendKeys(text);
-        return element;
-    }
-
-    private void TapOnElement(By locator) {
-        driver.findElement(locator).click();
-    }
-
-private boolean isElementPresent(By locator) {
-       try {
-            driver.findElement(locator);
-            return true;
-        } catch (NoSuchElementException e) {
-            return false;
-        }
-    }
+        //Assert title
+Assert.assertEquals("Oops not equal text", articleTytleInList, articleTytle);
+  }
 }
-//        return waitElementPresent(locator, "not found"  );
-//    }
+
 
 
 
