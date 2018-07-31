@@ -219,6 +219,13 @@ Thread.sleep(2000);
         //Assert title
 Assert.assertEquals("Oops not equal text", articleTytleInList, articleTytle);
   }
+
+  @Test
+    public void HW6assertTitlePresent(){
+    waitForElementAndClick(By.id("view_featured_article_card_image"), "", 7);
+    Assert.assertTrue(isElementPresent(By.id("view_page_title_text")));
+
+  }
 }
 
 
