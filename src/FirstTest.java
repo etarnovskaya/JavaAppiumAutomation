@@ -1,15 +1,21 @@
-import io.appium.java_client.TouchAction;
+import lib.CoreTestCase;
+import lib.ui.MainPageObject;
+import lib.ui.SearchPageObject;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-public class FirstTest extends TestBase {
-
+public class FirstTest extends CoreTestCase {
+MainPageObject mainPageObject;
+protected  void setUp() throws Exception {
+    super.setUp();
+    mainPageObject = new MainPageObject(driver);
+}
 
     @Test
-    public void firstTest() {
+    public void testFirst() {
         WebElement elementInitSearch = waitElementPresentByXPath(
                 "//*[contains(@text, 'Search Wikipedia')]",
                 "element can not find",
@@ -31,23 +37,30 @@ public class FirstTest extends TestBase {
     }
 
     @Test
-    public void searchForJavaArticles() {
-        WebElement elementInitSearch = waitElementPresentByXPath(
-                "//*[contains(@text, 'Search Wikipedia')]",
-                "element 'elementInitSearch' can not find",
-                3);
-        elementInitSearch.click();
+    public void testSearchForJavaArticles() {
+        SearchPageObject searchPageObject= new SearchPageObject(driver);
 
-        WebElement elementTypeInSearchField = driver.findElementById("search_src_text");
-        elementTypeInSearchField.sendKeys("Java");
+        searchPageObject.initSearchInput();
+        searchPageObject.typeInSearchLine("Java");
+        searchPageObject.waitForSearchResult("Object-oriented programming language");
 
-        waitElementPresentByXPath("//*[@resource-id='org.wikipedia:id/page_list_item_container']//*[@text='Object-oriented programming language']",
-                "Can not find",
-                15);
+
+//        WebElement elementInitSearch = waitElementPresentByXPath(
+//                "//*[contains(@text, 'Search Wikipedia')]",
+//                "element 'elementInitSearch' can not find",
+//                3);
+//        elementInitSearch.click();
+//
+//        WebElement elementTypeInSearchField = driver.findElementById("search_src_text");
+//        elementTypeInSearchField.sendKeys("Java");
+//
+//        waitElementPresentByXPath("//*[@resource-id='org.wikipedia:id/page_list_item_container']//*[@text='Object-oriented programming language']",
+//                "Can not find",
+//                15);
     }
 
     @Test
-    public void Homework2() {
+    public void testHomework2() {
         WebElement elementInitSearch = waitElementPresentByXPath(
                 "//*[contains(@text, 'Search Wikipedia')]",
                 "element can not find",
@@ -61,7 +74,7 @@ public class FirstTest extends TestBase {
     }
 
     @Test
-    public void swipeTest() {
+    public void testSwipeTest() {
         WebElement elementInitSearch = waitElementPresentByXPath(
                 "//*[contains(@text, 'Search Wikipedia')]",
                 "element 'elementInitSearch' can not find",
@@ -70,7 +83,7 @@ public class FirstTest extends TestBase {
 
         WebElement elementTypeInSearchField = driver.findElementById("search_src_text");
         elementTypeInSearchField.sendKeys("App");
-        swipeToElement(By.id("page_external_link"), "element not present", 0);
+        mainPageObject.swipeToElement(By.id("page_external_link"), "element not present", 0);
 
 
 //        waitElementPresentByXPath("//*[@resource-id='org.wikipedia:id/page_list_item_container']//*[@text='Object-oriented programming language']",
@@ -82,43 +95,43 @@ public class FirstTest extends TestBase {
     }
 
   @Test
-    public  void saveArticleToMyList(){
+    public  void testSaveArticleToMyList(){
 
         String folderName = "Learning programming";
 
-        waitForElementAndClick(By.xpath("//*[contains(@text, 'Search Wikipedia')]"),
+      mainPageObject.waitForElementAndClick(By.xpath("//*[contains(@text, 'Search Wikipedia')]"),
                 "element 'elementInitSearch' can not find", 3);
-      waitForElementAndSendKeys(By.id("search_src_text"),
+      mainPageObject.waitForElementAndSendKeys(By.id("search_src_text"),
               "Java", "element 'elementInitSearch' can not find",3 );
-      waitForElementAndClick(By.xpath("//*[@resource-id='org.wikipedia:id/page_list_item_container']//*[@text='Object-oriented programming language']"),
+      mainPageObject.waitForElementAndClick(By.xpath("//*[@resource-id='org.wikipedia:id/page_list_item_container']//*[@text='Object-oriented programming language']"),
               "element not found", 3 );
       //waitElementPresent(By.xpath("//*[@text='Object-oriented programming language']"),
             //  "notPresent", 3);
-      waitForElementAndClick(By.xpath("//*[@content-desc='More options']"),
+      mainPageObject.waitForElementAndClick(By.xpath("//*[@content-desc='More options']"),
               "button menu not found", 3);
-waitForElementAndClick(By.xpath("//*[@text='Add to reading list']"),
+      mainPageObject.waitForElementAndClick(By.xpath("//*[@text='Add to reading list']"),
         "err", 3);
-waitForElementAndClick(By.id("onboarding_button"),
+      mainPageObject.waitForElementAndClick(By.id("onboarding_button"),
         "element button gotit not present", 3);
-waitForElementAndClear(By.id("text_input"),
+      mainPageObject.waitForElementAndClear(By.id("text_input"),
         "text_input not found");
-waitForElementAndSendKeys(By.id("text_input"),folderName,
+      mainPageObject.waitForElementAndSendKeys(By.id("text_input"),folderName,
         "can not put text to input  field", 3);
-waitForElementAndClick(By.xpath("//*[@text='OK']"),
+      mainPageObject.waitForElementAndClick(By.xpath("//*[@text='OK']"),
         "button 'Ok' not found", 5);
-waitForElementAndClick(By.xpath("//*[@content-desc='Navigate up']"),
+      mainPageObject.waitForElementAndClick(By.xpath("//*[@content-desc='Navigate up']"),
         "button 'X' not found", 5);
-waitForElementAndClick(By.xpath("//*[@content-desc='My lists']"),
+      mainPageObject.waitForElementAndClick(By.xpath("//*[@content-desc='My lists']"),
         "element 'My lists' not found", 5);
-waitForElementAndClick(By.xpath("//*[@text='" + folderName+"']"),
+      mainPageObject.waitForElementAndClick(By.xpath("//*[@text='" + folderName+"']"),
         "folder 'Learning programming' not clicked", 5);
 //waitElementPresent(By.xpath("//[@text='object-oriented programming language']"),
 //        "article 'object-oriented programming language' not found",
 //        3);
 //object-oriented programming language
-      swipeElementToLeft(By.xpath("//*[@resource-id='org.wikipedia:id/page_list_item_container']//*[@text='Object-oriented programming language']"),
+      mainPageObject.swipeElementToLeft(By.xpath("//*[@resource-id='org.wikipedia:id/page_list_item_container']//*[@text='Object-oriented programming language']"),
               "article 'object-oriented programming language' not found");
-      waitElementNotPresent(By.xpath("//*[@resource-id='org.wikipedia:id/page_list_item_container']//*[@text='Object-oriented programming language']"),
+      mainPageObject.waitElementNotPresent(By.xpath("//*[@resource-id='org.wikipedia:id/page_list_item_container']//*[@text='Object-oriented programming language']"),
               "article 'object-oriented programming language' not deleted", 5);
     }
 
