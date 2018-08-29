@@ -14,7 +14,7 @@ public class CoreTestCase extends TestCase{
 @Override
     protected void setUp() throws Exception {
         super.setUp();
-        DesiredCapabilities capabilities = new DesiredCapabilities();
+        DesiredCapabilities  capabilities = new DesiredCapabilities();
         capabilities.setCapability("platformName", "Android");
         capabilities.setCapability("deviceName", "androidTestDevice");
         capabilities.setCapability("platformVersion", "7.0");
